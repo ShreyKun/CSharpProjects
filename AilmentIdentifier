@@ -1,0 +1,156 @@
+None selected 
+
+Skip to content
+Using Gmail with screen readers
+in:sent 
+Conversations
+0.18 GB of 15 GB used
+Terms · Privacy · Program Policies
+Last account activity: 17 minutes ago
+Details
+using System;
+using Microsoft.ML;
+using Microsoft.ML.Data;
+
+namespace DiseaseDiagnosisPredictor
+{
+    public class DiseaseInput
+    {
+        [LoadColumn(0)] public float Cough { get; set; }
+        [LoadColumn(1)] public float Headache { get; set; }
+        [LoadColumn(2)] public float RunnyNose { get; set; }
+        [LoadColumn(3)] public float Fatigue { get; set; }
+        [LoadColumn(4)] public float MusclePain { get; set; }
+        [LoadColumn(5)] public float SoreThroat { get; set; }
+        [LoadColumn(6)] public float ShortnessOfBreath { get; set; }
+        [LoadColumn(7)] public float Nausea { get; set; }
+        [LoadColumn(8)] public float Vomiting { get; set; }
+        [LoadColumn(9)] public float Fever { get; set; }
+        [LoadColumn(10)] public float Chills { get; set; }
+        [LoadColumn(11)] public float Diarrhea { get; set; }
+        [LoadColumn(12)] public float Congestion { get; set; }
+        [LoadColumn(13)] public float StomachAche { get; set; }
+        [LoadColumn(14)] public string Disease { get; set; } // Label column
+    }
+
+    public class DiseasePrediction
+    {
+        [ColumnName("PredictedLabel")]
+        public string Disease { get; set; } // Correct type: string
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Set up ML.NET context
+            var mlContext = new MLContext();
+
+            // Load your dataset
+            var dataPath = @"C:\Users\shrey\OneDrive\Desktop\DiseaseDiagnosisPredictor\DiseaseDiagnosisPredictor\DiseaseDiagnosisPredictor\Data\Data.csv";
+            var data = mlContext.Data.LoadFromTextFile<DiseaseInput>(dataPath, separatorChar: ',', hasHeader: true);
+
+            // Define your training pipeline
+            var pipeline = mlContext.Transforms.Conversion.MapValueToKey("Label", nameof(DiseaseInput.Disease))
+                .Append(mlContext.Transforms.Concatenate("Features",
+                                                          nameof(DiseaseInput.Cough),
+                                                          nameof(DiseaseInput.Headache),
+                                                          nameof(DiseaseInput.RunnyNose),
+                                                          nameof(DiseaseInput.Fatigue),
+                                                          nameof(DiseaseInput.MusclePain),
+                                                          nameof(DiseaseInput.SoreThroat),
+                                                          nameof(DiseaseInput.ShortnessOfBreath),
+                                                          nameof(DiseaseInput.Nausea),
+                                                          nameof(DiseaseInput.Vomiting),
+                                                          nameof(DiseaseInput.Fever),
+                                                          nameof(DiseaseInput.Chills),
+                                                          nameof(DiseaseInput.Diarrhea),
+                                                          nameof(DiseaseInput.Congestion),
+                                                          nameof(DiseaseInput.StomachAche)))
+                .Append(mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy("Label", "Features"))
+                .Append(mlContext.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+
+            // Train the model
+            var model = pipeline.Fit(data);
+
+            // Save the model
+            var modelPath = "DiseaseModel.zip";
+            mlContext.Model.Save(model, data.Schema, modelPath);
+
+            Console.WriteLine($"Model trained and saved successfully at {modelPath}");
+
+            // Get user input for symptoms
+            Console.WriteLine("Enter symptoms (yes or no):");
+            float cough = GetSymptomInput("Cough (yes/no): ");
+            float headache = GetSymptomInput("Headache (yes/no): ");
+            float runnyNose = GetSymptomInput("Runny Nose (yes/no): ");
+            float fatigue = GetSymptomInput("Fatigue (yes/no): ");
+            float musclePain = GetSymptomInput("Muscle pain (yes/no): ");
+            float soreThroat = GetSymptomInput("Sore Throat (yes/no): ");
+            float shortnessOfBreath = GetSymptomInput("Shortness Of Breath (yes/no): ");
+            float nausea = GetSymptomInput("Nausea (yes/no): ");
+            float vomiting = GetSymptomInput("Vomiting (yes/no): ");
+            float fever = GetSymptomInput("Fever (yes/no): ");
+            float chills = GetSymptomInput("Chills (yes/no): ");
+            float diarrhea = GetSymptomInput("Diarrhea (yes/no): ");
+            float congestion = GetSymptomInput("Congestion (yes/no): ");
+            float stomachAche = GetSymptomInput("Stomach Ache (yes/no): ");
+
+            // Create an instance of the input class
+            var input = new DiseaseInput
+            {
+                Cough = cough,
+                Headache = headache,
+                RunnyNose = runnyNose,
+                Fatigue = fatigue,
+                MusclePain = musclePain,
+                SoreThroat = soreThroat,
+                ShortnessOfBreath = shortnessOfBreath,
+                Nausea = nausea,
+                Vomiting = vomiting,
+                Fever = fever,
+                Chills = chills,
+                Diarrhea = diarrhea,
+                Congestion = congestion,
+                StomachAche = stomachAche
+            };
+
+            // Create a prediction engine
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<DiseaseInput, DiseasePrediction>(model);
+
+            // Predict the disease
+            var prediction = predictionEngine.Predict(input);
+
+            // Output the predicted disease
+            Console.BackgroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine($"Predicted Disease: {prediction.Disease}", Console.BackgroundColor);
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine("NOTE: The Medications must be taken after the consultaion of a doctor");
+
+            // Wait for user input before closing the console
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Press any key to exit...", Console.ForegroundColor);
+            Console.ReadKey();
+        }
+
+        static float GetSymptomInput(string symptomPrompt)
+        {
+            Console.Write(symptomPrompt);
+            string input = Console.ReadLine().Trim().ToLower();
+
+            while (input != "yes" && input != "no")
+            {
+                Console.WriteLine("Please enter 'yes' or 'no'.");
+                Console.Write(symptomPrompt);
+                input = Console.ReadLine().Trim().ToLower();
+            }
+
+            return input == "yes" ? 1f : 0f; // Convert to float
+        }
+    }
+}
+Code hai. Delete kiya to 2 baap ka.txt
+Displaying Code hai. Delete kiya to 2 baap ka.txt.
