@@ -1,0 +1,20 @@
+Cough,Headache,Runny Nose,Fatigue,Muscle Pain,Sore Throat,Shortness of Breath,Nausea,Vomiting,Fever,Chills,Diarrhea,Congestion,Stomach Ache,Disease
+1,0,1,1,0,1,0,0,0,1,0,0,1,0,Common Cold    Medication to be taken: Paracetamol
+1,1,1,1,1,1,0,0,0,1,1,0,1,0,Influenza    Medication to be taken: Oseltamivir
+0,0,0,0,0,0,0,1,1,0,0,1,0,1,Food Poisoning    Medication to be taken: ORS(to prevent dehydration)
+1,1,0,1,0,1,1,0,0,1,1,0,0,0,Strep Throat    Medication to be taken: Take paracetamol for pain and fever and consult a doctor
+1,0,1,0,0,1,0,0,0,0,0,0,1,0,Allergies     Medication to be taken: Cetirizine or fexofenadine
+0,1,0,1,0,0,0,1,1,1,0,1,0,1,Gastroenteritis    Medication to be taken: ORS(to prevent dehydration)
+1,1,1,1,1,1,1,1,1,1,1,0,1,1,Severe Flu    Medication to be taken: oseltamivir
+0,1,1,0,0,0,0,0,1,0,0,0,0,0,Migraine    Medication to be taken: Sumatriptan
+0,1,0,1,1,1,0,0,0,0,0,0,0,0,Fatigue Syndrome   Medication to be taken: Multivitamins
+0,1,1,1,0,1,1,0,0,0,1,0,1,0,Bronchitis    Medication to be taken: Salbutamol
+0,1,0,1,1,1,0,0,0,0,0,0,0,0,"Sinusitis    Medication to be taken: Saline Nasal Spray, Oxymetazoline"
+0,1,0,1,1,0,0,1,1,1,1,0,0,1,Typhoid    Medication to be taken: ORS for hydration and Ciprofloxacin
+1,1,0,1,1,0,0,1,1,1,1,1,0,0,Viral Infection    Medication to be taken: Paracetamol and adequate hydration
+0,0,0,0,0,0,0,1,1,1,0,1,0,1,Cholera    Medication to be taken: ORS (to prevent dehydration)
+0,1,1,1,1,0,0,1,1,1,1,0,0,1,Dengue Fever    Medication to be taken: Paracetamol and adequate hydration
+1,0,0,1,0,1,1,1,1,1,1,1,0,1,Pneumonia    Medication to be taken: Cipmox CV-625
+0,1,1,1,1,1,0,0,0,1,0,0,0,0,Viral Fever    Medication to be taken: Paracetamol and lots of fluids
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,No disease Found
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,Severe Infection    Precaution to be taken: Consult a doctor immediately
